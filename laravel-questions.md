@@ -285,6 +285,120 @@ echo $example->exampleMethod("dynamic value");
   }
   ```
 
+#### 15. Global Scope
+
+- **Question:** What is a global scope in Laravel and how do you define one?
+
+- **Answer:** A global scope in Laravel allows you to add constraints to all queries for a given model. You can define a global scope by creating a class that implements the `Scope` interface and then applying it to a model.
+
+  **Example:**
+
+  ```php
+  namespace App\Scopes;
+
+  use Illuminate\Database\Eloquent\Builder;
+  use Illuminate\Database\Eloquent\Model;
+  use Illuminate\Database\Eloquent\Scope;
+
+  class ActiveScope implements Scope {
+          public function apply(Builder $builder, Model $model) {
+                  return $builder->where('active', 1);
+          }
+  }
+  ```
+
+  **Applying the Scope:**
+
+  ```php
+  namespace App\Models;
+
+  use Illuminate\Database\Eloquent\Model;
+  use App\Scopes\ActiveScope;
+
+  class User extends Model {
+          protected static function booted() {
+                  static::addGlobalScope(new ActiveScope);
+          }
+  }
+  ```
+
+#### 16. Local Scope
+
+- **Question:** What is a local scope in Laravel and how do you define one?
+
+- **Answer:** A local scope allows you to define common query constraints that you can reuse within your model. You define a local scope by adding a method to your model and prefixing it with `scope`.
+
+  **Example:**
+
+  ```php
+  namespace App\Models;
+
+  use Illuminate\Database\Eloquent\Model;
+
+  class User extends Model {
+          public function scopeActive($query) {
+                  return $query->where('active', 1);
+          }
+  }
+  ```
+
+  **Using the Local Scope:**
+
+  ```php
+  $activeUsers = User::active()->get();
+  ```
+
+#### 17. Function Overloading
+
+- **Question:** What is function overloading and does PHP support it?
+
+- **Answer:** Function overloading is the ability to define multiple functions with the same name but different parameters. PHP does not support function overloading natively. However, you can achieve similar functionality using variadic functions or by checking the number and type of arguments within a single function.
+
+  **Example:**
+
+  ```php
+  class Example {
+          public function display(...$args) {
+                  if (count($args) == 1) {
+                          echo "One argument: " . $args[0];
+                  } elseif (count($args) == 2) {
+                          echo "Two arguments: " . $args[0] . " and " . $args[1];
+                  } else {
+                          echo "No arguments or more than two arguments.";
+                  }
+          }
+  }
+
+  $example = new Example();
+  $example->display("Hello");
+  $example->display("Hello", "World");
+  ```
+
+#### 18. Function Overwriting
+
+- **Question:** What is function overwriting and how is it different from overloading?
+
+- **Answer:** Function overwriting, also known as method overriding, occurs when a subclass provides a specific implementation of a method that is already defined in its superclass. This allows the subclass to modify or extend the behavior of the method.
+
+  **Example:**
+
+  ```php
+  class ParentClass {
+          public function display() {
+                  echo "Display from ParentClass";
+          }
+  }
+
+  class ChildClass extends ParentClass {
+          public function display() {
+                  echo "Display from ChildClass";
+          }
+  }
+
+  $child = new ChildClass();
+  $child->display(); // Outputs: Display from ChildClass
+  ```
+
 
 
 - will add more later
